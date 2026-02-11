@@ -35,4 +35,19 @@ QUnit.module("Тестируем функцию mergeBy", function() {
             { id: 2, name: "Bob", age: 25 }
         ]);
     });
+
+    QUnit.test("Убирает дубликаты при объединении массивов", function(assert) {
+        const array1 = [
+            { id: 1, tags: ["a", "b"] }
+        ];
+        const array2 = [
+            { id: 1, tags: ["b", "c"] }
+        ];
+
+        const result = mergeBy(array1, array2, "id");
+
+        assert.deepEqual(result, [
+            { id: 1, tags: ["a", "b", "c"] }
+        ]);
+    });
 });
