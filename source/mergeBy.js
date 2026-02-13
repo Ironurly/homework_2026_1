@@ -18,7 +18,15 @@
  */
 const mergeBy = (array1, array2, key) => {
     const merged = new Map();
-
+    /**
+     * Функция проверки id и добавления объектов в коллекцию
+     * @param {Object} item - объект
+     *
+     * @example
+     * addItem(
+     *   [{ id: 1 }]
+     * );
+     */
     const addItem = item => {
         const identifier = item[key];
         if (identifier === undefined) {
