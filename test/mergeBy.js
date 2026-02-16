@@ -50,4 +50,64 @@ QUnit.module("Тестируем функцию mergeBy", function() {
             { id: 1, tags: ["a", "b", "c"] }
         ]);
     });
+
+    QUnit.test("Объединяет элементы с одинаковым ключом в одном массиве", function(assert) {
+        const result = mergeBy(
+            [{ id: 1, tags: ["a"] }, { id: 1, tags: ["b", "a"] }],
+            [],
+            "id"
+        );
+
+        assert.deepEqual(result, [
+            { id: 1, tags: ["a", "b"] }
+        ]);
+    });
+
+    QUnit.test("Объединяет разные поля при совпадении ключа", function(assert) {
+        const result = mergeBy(
+            [{ id: 1, a: 1 }],
+            [{ id: 1, b: [2] }],
+            "id"
+        );
+
+        assert.deepEqual(result, [
+            { id: 1, a: 1, b: [2] }
+        ]);
+    });
+
+    QUnit.test("Объединяет скаляр и массив в единый массив", function(assert) {
+        const result = mergeBy(
+            [{ id: 1, a: 1 }],
+            [{ id: 1, a: [2] }],
+            "id"
+        );
+
+        assert.deepEqual(result, [
+            { id: 1, a: [1, 2] }
+        ]);
+    });
+
+    QUnit.test("Объединяет строку и массив в единый массив", function(assert) {
+        const result = mergeBy(
+            [{ id: 1, a: "asd" }],
+            [{ id: 1, a: [2] }],
+            "id"
+        );
+
+        assert.deepEqual(result, [
+            { id: 1, a: ["asd", 2] }
+        ]);
+    });
+
+    QUnit.test("Перезаписывает скалярное значение при совпадении ключа", function(assert) {
+        const result = mergeBy(
+            [{ id: 1, a: 1 }],
+            [{ id: 1, a: 2 }],
+            "id"
+        );
+
+        assert.deepEqual(result, [
+            { id: 1, a: 2 }
+        ]);
+    });
 });

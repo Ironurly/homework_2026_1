@@ -34,10 +34,7 @@ const mergeBy = (array1, array2, key) => {
         }
 
         if (!merged.has(identifier)) {
-            const copy = {};
-            Object.keys(item).forEach(prop => {
-                copy[prop] = item[prop];
-            });
+            const copy = { ...item };
             merged.set(identifier, copy);
             return;
         }
@@ -46,7 +43,10 @@ const mergeBy = (array1, array2, key) => {
         Object.keys(item).forEach(prop => {
 
             if (Array.isArray(target[prop]) || Array.isArray(item[prop])) {
-                target[prop] = Array.from(new Set([...target[prop], ...item[prop]]));
+                const normalize = value => (Array.isArray(value) ? value : value === undefined ? [] : [value]);
+                const left = normalize(target[prop]);
+                const right = normalize(item[prop]);
+                target[prop] = Array.from(new Set([...left, ...right]));
             } else {
                 target[prop] = item[prop];
             }
