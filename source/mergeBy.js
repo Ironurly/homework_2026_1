@@ -34,22 +34,20 @@ const mergeBy = (array1, array2, key) => {
         }
 
         if (!merged.has(identifier)) {
-            const copy = { ...item };
-            merged.set(identifier, copy);
+            merged.set(identifier, { ...item });
             return;
         }
 
         const target = merged.get(identifier);
         Object.keys(item).forEach(prop => {
-
-            if (Array.isArray(target[prop]) || Array.isArray(item[prop])) {
-                const normalize = value => (Array.isArray(value) ? value : value === undefined ? [] : [value]);
-                const left = normalize(target[prop]);
-                const right = normalize(item[prop]);
-                target[prop] = Array.from(new Set([...left, ...right]));
-            } else {
+            if (prop === key || !(prop in target)) {
                 target[prop] = item[prop];
+                return;
             }
+
+            target[prop] = Array.from(
+                new Set([...normalize(target[prop]), ...normalize(item[prop])])
+            );
         });
     };
 
@@ -58,3 +56,13 @@ const mergeBy = (array1, array2, key) => {
 
     return Array.from(merged.values());
 };
+/**
+ * Функция приведения объекта к типу данных массива, если это необходимо
+ * @param {Object} value - объект
+ *
+ * @example
+ * normalize([1, 2, 3]); // returns [1, 2, 3]
+ * normalize(1); // returns [1]
+ * normalize(undefined); // returns []
+ */
+const normalize = value => (Array.isArray(value) ? value : value === undefined ? [] : [value]);

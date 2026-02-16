@@ -107,7 +107,7 @@ QUnit.module("Тестируем функцию mergeBy", function() {
         );
 
         assert.deepEqual(result, [
-            { id: 1, a: 2 }
+            { id: 1, a: [1, 2] }
         ]);
     });
 });
